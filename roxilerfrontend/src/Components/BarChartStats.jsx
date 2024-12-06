@@ -46,9 +46,9 @@ const BarChartStats = () => {
       const response = await axios.get(
         `${process.env.REACT_APP_API_URL}/getBarChart`,
         {
-          params:{
-            month: months[month - 1]
-          }
+          params: {
+            month: months[month - 1],
+          },
         }
       );
       const data = response.data;
@@ -173,7 +173,7 @@ const BarChartStats = () => {
                   min: 0, // Minimum value for Y-axis
                   max: 10, // Maximum value for Y-axis
                   ticks: {
-                    stepSize: 2, // Step size for Y-axis ticks
+                    stepSize: 1, // Step size for Y-axis ticks
                     callback: (value) => value, // Format the ticks as integers
                     color: "black",
                     font: {

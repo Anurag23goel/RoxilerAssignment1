@@ -6,7 +6,7 @@ const ProductsTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState("");
-  const [month, setMonth] = useState(3); // Default to March (3)
+  const [month, setMonth] = useState("March"); // Default to March (3)
   const [isLoading, setIsLoading] = useState(false);
 
   const barStats = () => {
@@ -41,7 +41,7 @@ const ProductsTable = () => {
           params: {
             page: currentPage,
             search: search.trim(),
-            month: month ? months[month - 1] : "", // Dynamically map month number to name
+            month: month ? month : "", // Dynamically map month number to name
           },
         }
       );
@@ -64,7 +64,7 @@ const ProductsTable = () => {
   };
 
   const handleMonthChange = (e) => {
-    setMonth(Number(e.target.value)); // Convert value to number
+    setMonth(e.target.value); // Convert value to number
     setCurrentPage(1); // Reset to the first page on month change
   };
 
@@ -89,7 +89,7 @@ const ProductsTable = () => {
         >
           <option value="">Select Month</option>
           {months.map((monthName, index) => (
-            <option key={index} value={index + 1}>
+            <option key={index} value={monthName}>
               {monthName}
             </option>
           ))}
@@ -123,7 +123,6 @@ const ProductsTable = () => {
               <th className="border border-gray-300 px-4 py-2">Price</th>
               <th className="border border-gray-300 px-4 py-2">Description</th>
               <th className="border border-gray-300 px-4 py-2">Category</th>
-              {/* <th className="border border-gray-300 px-4 py-2">Date of Sale</th> */}
               <th className="border border-gray-300 px-4 py-2">Sold</th>
               <th className="border border-gray-300 px-4 py-2">Image</th>
             </tr>
@@ -153,11 +152,6 @@ const ProductsTable = () => {
                       product.category.slice(1)}
                   </td>
 
-                  {/* <td className="border border-gray-300 px-4 py-2">
-                    {product.dateOfSale
-                      ? new Date(product.dateOfSale).toLocaleDateString()
-                      : "N/A"}
-                  </td> */}
                   <td className="border border-gray-300 px-4 py-2">
                     {product.sold ? "Yes" : "No"}
                   </td>

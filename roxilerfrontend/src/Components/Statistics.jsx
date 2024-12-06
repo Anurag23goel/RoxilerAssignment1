@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 
 const Statistics = () => {
-  const [month, setMonth] = useState(3); // Default to March (3)
+  const [month, setMonth] = useState("March"); // Default to March (3)
   const [statistics, setStatistics] = useState(null); // State to store statistics
   const [isLoading, setIsLoading] = useState(false); // Loading state
 
@@ -26,7 +26,7 @@ const Statistics = () => {
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_API_URL}/getStatistics`,
-        { params: { month: months[month - 1] } }
+        { params: { month: month ? month : "" } }
       );
       setStatistics(response.data); // Set the fetched data to state
     } catch (error) {
@@ -49,10 +49,10 @@ const Statistics = () => {
         <select
           className="border p-2 rounded-lg text-gray-800 bg-white"
           value={month}
-          onChange={(e) => setMonth(parseInt(e.target.value))}
+          onChange={(e) => setMonth(e.target.value)}
         >
           {months.map((month, index) => (
-            <option key={index} value={index + 1}>
+            <option key={index} value={month}>
               {month}
             </option>
           ))}

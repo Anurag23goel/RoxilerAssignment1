@@ -1,4 +1,5 @@
 const Product = require("../models/products");
+const axios = require("axios");
 
 // Get all products based on search text
 exports.getAllProducts = async (req, res) => {
@@ -99,9 +100,8 @@ exports.getStatistics = async (req, res) => {
     };
 
     // Function to get month number
-    const getMonthNumber = (monthName) => monthMapping[monthName];
 
-    const monthNumber = getMonthNumber(month);
+    const monthNumber = month ? monthMapping[month] : null;
 
     // Filtering products based on month
     const productsInMonth = await Product.find({
@@ -125,7 +125,7 @@ exports.getStatistics = async (req, res) => {
 
     res.status(200).json({
       message: "Statistics for month",
-      productsInMonth,
+      // productsInMonth,
       totalAmountOfSale,
       totalSoldItems,
       totalUnsoldItems,
@@ -141,8 +141,24 @@ exports.getBarChart = async (req, res) => {
   const { month } = req.query; // Assuming 'month' is passed as a string like "March"
 
   try {
+    // Mapping months corresponding to numbers for filtering
+    const monthMapping = {
+      January: 1,
+      February: 2,
+      March: 3,
+      April: 4,
+      May: 5,
+      June: 6,
+      July: 7,
+      August: 8,
+      September: 9,
+      October: 10,
+      November: 11,
+      December: 12,
+    };
+
     // Convert month name to month number (1 for January, 2 for February, etc.)
-    const monthNumber = new Date(`${month} 1, 2000`).getMonth() + 1;
+    const monthNumber = month ? monthMapping[month] : null;
 
     const priceBoundaries = [
       0,
@@ -212,7 +228,7 @@ exports.getBarChart = async (req, res) => {
 
 // Handler for categories pie chart with no of products in each category
 exports.getPieChartData = async (req, res) => {
-  const { month } = req.query
+  const { month } = req.query;
 
   try {
     const monthMapping = {
@@ -231,9 +247,7 @@ exports.getPieChartData = async (req, res) => {
     };
 
     // Function to get month number
-    const getMonthNumber = (monthName) => monthMapping[monthName];
-
-    const monthNumber = getMonthNumber(month);
+    const monthNumber = month ? monthMapping[month] : null;
 
     // Filtering products based on month
     const productsInMonth = await Product.find({
@@ -255,5 +269,44 @@ exports.getPieChartData = async (req, res) => {
   } catch (error) {
     console.log("Error getting pie chart", error.message);
     res.status(500).json({ error: "Failed to fetch pie chart data" });
+  }
+};
+
+// Handler for combined stats
+exports.getCombinedStats = async (req, res) => {
+  const { month } = req.query;
+
+  try {
+    // Base URL of your APIs
+    const baseURL = "http://localhost:5000/api/v1";
+
+    // Define API endpoints
+    const statisticsAPI = `${baseURL}/getStatistics`;
+    const barChartAPI = `${baseURL}/getBarChart`;
+    const pieChartAPI = `${baseURL}/getPieChart`;
+
+    // Fetch data from all three APIs concurrently
+
+    const statisticsResponse = await axios.get(statisticsAPI, {
+      params: { month },
+    });
+    const barChartResponse = await axios.get(barChartAPI, {
+      params: { month },
+    });
+    const pieChartResponse = await axios.get(pieChartAPI, {
+      params: { month },
+    });
+
+    // Combine the responses
+    const combinedData = {
+      statistics: statisticsResponse.data,
+      barChart: barChartResponse.data,
+      pieChart: pieChartResponse.data,
+    };
+
+    res.status(200).json(combinedData);
+  } catch (error) {
+    console.error("Error fetching combined stats:", error.message);
+    res.status(500).json({ error: "Failed to fetch combined statistics" });
   }
 };

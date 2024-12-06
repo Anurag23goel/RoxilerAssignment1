@@ -12,7 +12,6 @@ const App = () => {
         <Route path="/" element={<ProductsTable />} />
         <Route path="/barChartStats" element={<BarChartStats />} />
         <Route path="/statsForMonth" element={<Statistics />} />
-        {/* <Route path="/pieChartStats" element={<PieChartStats />} /> */}
       </Routes>
     </Router>
   );
