@@ -8,14 +8,14 @@ const ProductsTable = () => {
   const [search, setSearch] = useState("");
   const [month, setMonth] = useState(3); // Default to March (3)
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const barStats = () => {
     window.location.href = "/barChartStats";
-  }
+  };
 
   const statsForMonth = () => {
     window.location.href = "/statsForMonth";
-  }
+  };
 
   const months = [
     "January",
@@ -68,8 +68,6 @@ const ProductsTable = () => {
     setCurrentPage(1); // Reset to the first page on month change
   };
 
-
-
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Products</h1>
@@ -97,14 +95,20 @@ const ProductsTable = () => {
           ))}
         </select>
 
-          <button onClick={barStats}>
-            Bar Chart Stats
-          </button>
-          
-          <button onClick={statsForMonth}>
-            Show Statistics
-          </button>
+        {/* Action Buttons */}
+        <button
+          onClick={barStats}
+          className="px-4 py-2 bg-blue-500 text-white font-semibold rounded shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
+        >
+          Bar Chart Stats
+        </button>
 
+        <button
+          onClick={statsForMonth}
+          className="px-4 py-2 bg-green-500 text-white font-semibold rounded shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300"
+        >
+          Show Statistics
+        </button>
       </div>
 
       {/* Table */}
@@ -119,14 +123,18 @@ const ProductsTable = () => {
               <th className="border border-gray-300 px-4 py-2">Price</th>
               <th className="border border-gray-300 px-4 py-2">Description</th>
               <th className="border border-gray-300 px-4 py-2">Category</th>
-              <th className="border border-gray-300 px-4 py-2">Date of Sale</th>
+              {/* <th className="border border-gray-300 px-4 py-2">Date of Sale</th> */}
               <th className="border border-gray-300 px-4 py-2">Sold</th>
+              <th className="border border-gray-300 px-4 py-2">Image</th>
             </tr>
           </thead>
           <tbody>
             {products.length > 0 ? (
               products.map((product) => (
-                <tr key={product._id}>
+                <tr
+                  key={product._id}
+                  className="hover:bg-gray-200 hover:cursor-pointer"
+                >
                   <td className="border border-gray-300 px-4 py-2">
                     {product.id}
                   </td>
@@ -140,15 +148,29 @@ const ProductsTable = () => {
                     {product.description}
                   </td>
                   <td className="border border-gray-300 px-4 py-2">
-                    {product.category}
+                    {/* Capitalizing the first letter */}
+                    {product.category.charAt(0).toUpperCase() +
+                      product.category.slice(1)}
                   </td>
-                  <td className="border border-gray-300 px-4 py-2">
+
+                  {/* <td className="border border-gray-300 px-4 py-2">
                     {product.dateOfSale
                       ? new Date(product.dateOfSale).toLocaleDateString()
                       : "N/A"}
-                  </td>
+                  </td> */}
                   <td className="border border-gray-300 px-4 py-2">
                     {product.sold ? "Yes" : "No"}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {product.image ? (
+                      <img
+                        src={product.image}
+                        alt={product.title}
+                        className="w-16 h-16 object-cover"
+                      />
+                    ) : (
+                      <p>No image available</p> // Placeholder for no image
+                    )}
                   </td>
                 </tr>
               ))
@@ -167,24 +189,34 @@ const ProductsTable = () => {
       )}
 
       {/* Pagination */}
-      <div className="flex justify-center items-center gap-4 mt-4">
-        <button
-          className="px-4 py-2 bg-gray-300 rounded"
-          disabled={currentPage === 1}
-          onClick={() => setCurrentPage((prev) => prev - 1)}
-        >
-          Previous
-        </button>
-        <span>
-          Page {totalPages > 0 ? currentPage : 0} of {totalPages}
-        </span>
-        <button
-          className="px-4 py-2 bg-gray-300 rounded"
-          disabled={currentPage === totalPages}
-          onClick={() => setCurrentPage((prev) => prev + 1)}
-        >
-          Next
-        </button>
+      <div className="flex items-center justify-between mt-4">
+        <p>
+          Page No: <span>{currentPage}</span>
+        </p>
+
+        <div className="flex justify-between items-center gap-4 mt-4">
+          <button
+            className="px-4 py-2 bg-gray-200 text-gray-700 font-semibold rounded shadow-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400"
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage((prev) => prev - 1)}
+          >
+            Previous
+          </button>
+          <span>
+            Page {totalPages > 0 ? currentPage : 0} of {totalPages}
+          </span>
+          <button
+            className="px-4 py-2 bg-gray-200 text-gray-700 font-semibold rounded shadow-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400"
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage((prev) => prev + 1)}
+          >
+            Next
+          </button>
+        </div>
+
+        <div>
+          <p>Per Page: 10</p>
+        </div>
       </div>
     </div>
   );

@@ -139,7 +139,6 @@ exports.getStatistics = async (req, res) => {
 // Handler for bar chart with price range and no of products in that range
 exports.getBarChart = async (req, res) => {
   const { month } = req.query; // Assuming 'month' is passed as a string like "March"
-  console.log(month);
 
   try {
     // Convert month name to month number (1 for January, 2 for February, etc.)
