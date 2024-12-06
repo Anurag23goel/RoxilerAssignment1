@@ -13,6 +13,10 @@ const ProductsTable = () => {
     window.location.href = "/barChartStats";
   }
 
+  const statsForMonth = () => {
+    window.location.href = "/statsForMonth";
+  }
+
   const months = [
     "January",
     "February",
@@ -64,6 +68,8 @@ const ProductsTable = () => {
     setCurrentPage(1); // Reset to the first page on month change
   };
 
+
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Products</h1>
@@ -93,6 +99,10 @@ const ProductsTable = () => {
 
           <button onClick={barStats}>
             Bar Chart Stats
+          </button>
+          
+          <button onClick={statsForMonth}>
+            Show Statistics
           </button>
 
       </div>

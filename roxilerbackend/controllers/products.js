@@ -28,13 +28,19 @@ exports.getAllProducts = async (req, res) => {
     // Get the corresponding month number
     const monthNumber = month ? monthMapping[month] : null;
 
+    // Check if the search term is a valid number (to match the price field)
+    const parsedSearch = parseFloat(search);
+    const isPriceSearch = !isNaN(parsedSearch);
+
     // Build the search query
     const searchQuery = search
       ? {
           $or: [
             { title: { $regex: search, $options: "i" } },
             { description: { $regex: search, $options: "i" } },
-            { price: { $eq: parseFloat(search) } },
+            ...(isPriceSearch
+              ? [{ price: { $eq: parsedSearch } }] // Only include price search if it's a valid number
+              : []),
           ],
         }
       : {};
@@ -73,7 +79,7 @@ exports.getAllProducts = async (req, res) => {
 
 // Get Statistics based on month
 exports.getStatistics = async (req, res) => {
-  const { month } = req.body;
+  const { month } = req.query;
 
   try {
     // Mapping months corresponding to numbers for filtering
@@ -132,7 +138,8 @@ exports.getStatistics = async (req, res) => {
 
 // Handler for bar chart with price range and no of products in that range
 exports.getBarChart = async (req, res) => {
-  const { month } = req.body; // Assuming 'month' is passed as a string like "March"
+  const { month } = req.query; // Assuming 'month' is passed as a string like "March"
+  console.log(month);
 
   try {
     // Convert month name to month number (1 for January, 2 for February, etc.)
@@ -206,7 +213,7 @@ exports.getBarChart = async (req, res) => {
 
 // Handler for categories pie chart with no of products in each category
 exports.getPieChartData = async (req, res) => {
-  const { month } = req.body;
+  const { month } = req.query
 
   try {
     const monthMapping = {
